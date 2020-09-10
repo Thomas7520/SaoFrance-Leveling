@@ -1,0 +1,10 @@
+name: SaoFrance-Leveling
+version: 1.0.0
+main: com.thomas7520.saofrance.leveling.SaoFranceLeveling
+prefix: SAOLeveling
+load: STARTUP
+authors: [Thomas7520]
+description: This is an xp plugin made for the SAO-France server.
+commands:
+  saoxp:
+    permission: saoxp.player
