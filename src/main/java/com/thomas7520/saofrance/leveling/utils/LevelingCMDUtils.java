@@ -12,7 +12,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 
 import static com.thomas7520.saofrance.leveling.SaoFranceLeveling.getLevelingSQLUtils;
 import static com.thomas7520.saofrance.leveling.SaoFranceLeveling.getUtils;
-import static org.bukkit.Color.RED;
+import static org.bukkit.ChatColor.RED;
 
 public class LevelingCMDUtils {
 
@@ -23,6 +23,7 @@ public class LevelingCMDUtils {
                         "\nNiveau : %s" +
                         "\nExpérience : %s/1000 ( %s )" +
                         "\n&2=====&6Sao-Leveling&2=====", playerLeveling.getPlayer().getName(), playerLeveling.getLevel(), playerLeveling.getExperience(), playerLeveling.getPercentageExperience() + "%")));
+
     }
 
 
@@ -41,19 +42,39 @@ public class LevelingCMDUtils {
         return playerLeveling;
     }
 
-    public void giveLevel(CommandSender sender, IPlayerLeveling playerLeveling, int newLevel) {
+    public void giveLevel(CommandSender sender, IPlayerLeveling playerLeveling, double newLevel) {
+        int oldLevel = playerLeveling.getLevel();
 
         if(newLevel < 0) {
             sender.sendMessage(RED + "Impossible d'attribuer le nouveau niveau ( < 0 )");
             return;
         }
 
-        playerLeveling.setLevel(playerLeveling.getLevel() + newLevel);
+        playerLeveling.setLevel((int) (playerLeveling.getLevel() + newLevel));
 
+        if(!playerLeveling.getPlayer().isOnline()) return;
+
+        Player player = ((PlayerLeveling) playerLeveling).getPlayer();
+        TitleUtils title = new TitleUtils();
+        title.send(((PlayerLeveling) playerLeveling).getPlayer(), ChatColor.GREEN + "LEVEL UP!", ChatColor.AQUA + String.valueOf(oldLevel) + " \u2794 " + playerLeveling.getLevel(), 1, 2, 1);
+        Firework firework = (Firework) player.getWorld().spawnEntity(new Location(player.getWorld(), player.getLocation().getX(), player.getLocation().getY() + 5.0, player.getLocation().getZ()), EntityType.FIREWORK);
+        FireworkMeta fireworkMeta = firework.getFireworkMeta();
+        fireworkMeta.setPower(1);
+        Color color = Color.fromRGB(50, 50, 255);
+        fireworkMeta.addEffect(FireworkEffect.builder().withColor(color).build());
+        firework.setFireworkMeta(fireworkMeta);
+        firework.detonate();
+
+        for (int i = 0; i < 5; ++i) {
+            final Firework fw2 = (Firework)player.getWorld().spawnEntity(new Location(player.getWorld(), player.getLocation().getX(), player.getLocation().getY() + 5.0, player.getLocation().getZ()), EntityType.FIREWORK);
+            fw2.setFireworkMeta(fireworkMeta);
+            firework.detonate();
+        }
     }
 
     public void removeLevel(CommandSender sender, IPlayerLeveling playerLeveling, int level) {
         int newLevel = playerLeveling.getLevel() - level;
+        int oldLevel = playerLeveling.getLevel();
 
         if(newLevel < 0) {
             sender.sendMessage(RED + "Impossible d'attribuer le nouveau niveau ( < 0 )");
@@ -61,33 +82,42 @@ public class LevelingCMDUtils {
         }
 
         playerLeveling.setLevel(playerLeveling.getLevel() - level);
+
+        if(!playerLeveling.getPlayer().isOnline()) return;
+
+        Player player = ((PlayerLeveling) playerLeveling).getPlayer();
+        TitleUtils title = new TitleUtils();
+        title.send(((PlayerLeveling) playerLeveling).getPlayer(), RED + "LEVEL DOWN!", ChatColor.AQUA + String.valueOf(oldLevel) + " \u2794 " + (playerLeveling.getLevel()), 1, 2, 1);
+        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ENDERDRAGON_GROWL, 5.0f, 5.0f);
+
     }
 
 
-    public void giveExperience(IPlayerLeveling playerLeveling, int newExperience) {
+    public void giveExperience(IPlayerLeveling playerLeveling, double experience, boolean needConvertPercentage) {
 
+        if(needConvertPercentage) experience = experience / 100 * 1000;
 
-        if(playerLeveling.canLevelUp(newExperience)) {
+        int experienceRemaining = (int) (experience - playerLeveling.getExperienceRequire());
 
-            playerLeveling.setExperience(playerLeveling.getExperience() + newExperience);
+        if (playerLeveling.canLevelUp((int) experience)) {
+            if(experienceRemaining > 0) playerLeveling.setExperience(experienceRemaining);
 
-
-
-            if (!playerLeveling.getPlayer().isOnline())  return;
-                Player player = ((PlayerLeveling) playerLeveling).getPlayer();
-                // send method for levelup with animation
-                // SaoFranceLeveling.getUtils().sendLevelUP(player, newLevel)
-                TitleUtils title = new TitleUtils();
-                title.send(((PlayerLeveling) playerLeveling).getPlayer(), ChatColor.GREEN + "LEVEL UP!", ChatColor.AQUA + String.valueOf(playerLeveling.getLevel() - 1) + " \u2794 " + playerLeveling.getLevel(), 1, 2, 1);
-                Firework firework = (Firework) player.getWorld().spawnEntity(new Location(player.getWorld(), player.getLocation().getX(), player.getLocation().getY() + 5.0, player.getLocation().getZ()), EntityType.FIREWORK);
-                FireworkMeta fireworkMeta = firework.getFireworkMeta();
-                fireworkMeta.setPower(1);
-                Color color = Color.fromRGB(50, 50, 255);
-                fireworkMeta.addEffect(FireworkEffect.builder().withColor(color).build());
-                firework.setFireworkMeta(fireworkMeta);
-                firework.detonate();
-
+            giveLevel(null, playerLeveling, 1);
+            return;
         }
+        playerLeveling.setExperience((int) (playerLeveling.getExperience() + experience));
+    }
+
+    public void removeExperience(CommandSender sender, IPlayerLeveling playerLeveling, double newExperience, boolean needConvertPercentage) {
+
+        if(needConvertPercentage) newExperience = newExperience / 100 * 1000;
+        if(newExperience > playerLeveling.getExperience() && playerLeveling.getLevel() != 0) {
+            removeLevel(sender, playerLeveling, 1);
+            playerLeveling.setExperience(0);
+            return;
+        }
+
+        playerLeveling.setExperience((int) (playerLeveling.getExperience() - newExperience));
     }
 
 }

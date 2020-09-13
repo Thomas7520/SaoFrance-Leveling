@@ -24,4 +24,5 @@ public interface IPlayerLeveling {
     SQLPlayerLeveling getPlayerSQL();
 
     OfflinePlayer getPlayer();
+
 }

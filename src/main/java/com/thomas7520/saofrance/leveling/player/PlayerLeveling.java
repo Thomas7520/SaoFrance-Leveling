@@ -39,22 +39,21 @@ public class PlayerLeveling implements IPlayerLeveling {
 
     @Override
     public int getExperienceRequire() {
-        return this.experience - 1000;
+        return 1000 - this.experience;
     }
 
     @Override
     public int getPercentageExperience() {
-        return this.experience * 100 / 1000;
+        return (int) (((double) this.experience / 1000) * 100);
     }
 
     @Override
     public int getPercentageExperienceRequire() {
-        return getExperienceRequire() * 100 / 1000;
+        return (int) (((double) getExperienceRequire() / 1000) * 100);
     }
 
     @Override
     public boolean canLevelUp(int experienceAcquire) {
-        System.out.println(experienceAcquire + this.experience);
         return experienceAcquire + this.experience >= 1000;
     }
 
@@ -66,5 +65,17 @@ public class PlayerLeveling implements IPlayerLeveling {
     @Override
     public SQLPlayerLeveling getPlayerSQL() {
         return new SQLPlayerLeveling(getPlayer().getUniqueId().toString());
+    }
+
+    @Override
+    public String toString() {
+        return "PlayerLeveling{" +
+                "uuid='" + uuid + '\'' +
+                ", level=" + level +
+                ", experience=" + experience +
+                ", experiencePercentage=" + getPercentageExperience() +
+                ", experienceRequire=" + getExperienceRequire() +
+                ", experienceRequirePercentage=" + getPercentageExperienceRequire() +
+                '}';
     }
 }

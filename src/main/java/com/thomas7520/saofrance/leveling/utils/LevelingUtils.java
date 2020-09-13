@@ -81,6 +81,4 @@ public class LevelingUtils {
         playersLeveling.forEach((key, value) -> savePlayer(value));
     }
 
-
-
 }

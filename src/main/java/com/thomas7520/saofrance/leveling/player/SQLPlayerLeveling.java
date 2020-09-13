@@ -84,17 +84,17 @@ public class SQLPlayerLeveling implements IPlayerLeveling{
 
     @Override
     public int getExperienceRequire() {
-        return getExperience() - 1000;
+        return 1000 - getExperience();
     }
 
     @Override
     public int getPercentageExperience() {
-        return getExperience() * 100 / 1000;
+        return (int) (((double) getExperience()) / 1000 * 100);
     }
 
     @Override
     public int getPercentageExperienceRequire() {
-        return getExperienceRequire() * 100 / 1000;
+        return (int) (((double) getExperienceRequire()) / 1000 * 100);
     }
 
     @Override
