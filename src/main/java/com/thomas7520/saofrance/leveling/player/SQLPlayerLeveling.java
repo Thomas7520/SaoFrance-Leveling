@@ -1,6 +1,5 @@
 package com.thomas7520.saofrance.leveling.player;
 
-import com.thomas7520.saofrance.leveling.SaoFranceLeveling;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -8,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
+
+import static com.thomas7520.saofrance.leveling.SaoFranceLeveling.getUtils;
 
 public class SQLPlayerLeveling implements IPlayerLeveling{
 
@@ -20,7 +21,7 @@ public class SQLPlayerLeveling implements IPlayerLeveling{
     @Override
     public void setLevel(int newLevel) {
         try {
-            final PreparedStatement ps = SaoFranceLeveling.getUtils().getSqlConnection().getConnection().prepareStatement("UPDATE players SET level = ? WHERE uuid = ?");
+            final PreparedStatement ps = getUtils().getSqlConnection().getConnection().prepareStatement("UPDATE players SET level = ? WHERE uuid = ?");
             ps.setInt(1, newLevel);
             ps.setString(2, uuid);
             ps.execute();
@@ -35,7 +36,7 @@ public class SQLPlayerLeveling implements IPlayerLeveling{
     public int getLevel() {
         int level = 0;
         try {
-            PreparedStatement ps = SaoFranceLeveling.getUtils().getSqlConnection().getConnection().prepareStatement("SELECT level FROM players WHERE uuid = ?");
+            PreparedStatement ps = getUtils().getSqlConnection().getConnection().prepareStatement("SELECT level FROM players WHERE uuid = ?");
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
@@ -51,7 +52,7 @@ public class SQLPlayerLeveling implements IPlayerLeveling{
     @Override
     public void setExperience(int newExperience) {
         try {
-            final PreparedStatement ps = SaoFranceLeveling.getUtils().getSqlConnection().getConnection().prepareStatement("UPDATE players SET experience = ? WHERE uuid = ?");
+            final PreparedStatement ps = getUtils().getSqlConnection().getConnection().prepareStatement("UPDATE players SET experience = ? WHERE uuid = ?");
             ps.setInt(1, newExperience);
             ps.setString(2, uuid);
 
@@ -67,7 +68,7 @@ public class SQLPlayerLeveling implements IPlayerLeveling{
     public int getExperience() {
         int experience = 0;
         try {
-            PreparedStatement ps = SaoFranceLeveling.getUtils().getSqlConnection().getConnection().prepareStatement("SELECT experience FROM players WHERE uuid = ?");
+            PreparedStatement ps = getUtils().getSqlConnection().getConnection().prepareStatement("SELECT experience FROM players WHERE uuid = ?");
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
 
@@ -104,7 +105,7 @@ public class SQLPlayerLeveling implements IPlayerLeveling{
 
     @Override
     public SQLPlayerLeveling getPlayerSQL() {
-        throw new UnsupportedOperationException("You can't get this method in the object SQLPlayerLeveling !");
+        return this;
     }
 
     @Override

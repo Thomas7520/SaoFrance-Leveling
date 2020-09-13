@@ -22,6 +22,7 @@ public class LevelingUtils {
         this.setupSQLConnexion();
         this.registerListeners();
         this.registerCommands();
+        this.startSavingScheduler();
     }
 
     private void setupSQLConnexion() {
@@ -48,6 +49,10 @@ public class LevelingUtils {
         main.getCommand("saoxp").setExecutor(new LevelingCMD());
     }
 
+    private void startSavingScheduler() {
+        LevelingTaskSaving task = new LevelingTaskSaving();
+        task.runTaskTimerAsynchronously(main, 0, 20 * 60 * 15);
+    }
 
     public HashMap<String, PlayerLeveling> getPlayersLeveling() {
         return playersLeveling;
@@ -80,5 +85,9 @@ public class LevelingUtils {
     public void savePlayers() {
         playersLeveling.forEach((key, value) -> savePlayer(value));
     }
+
+
+
+
 
 }
