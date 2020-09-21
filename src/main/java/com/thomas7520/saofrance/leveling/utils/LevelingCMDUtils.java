@@ -22,7 +22,7 @@ public class LevelingCMDUtils {
                         "\nPseudo : %s" +
                         "\nNiveau : %s" +
                         "\nExpérience : %s/1000 ( %s )" +
-                        "\n&2=====&6Sao-Leveling&2=====", playerLeveling.getPlayer().getName(), playerLeveling.getLevel(), playerLeveling.getExperience(), playerLeveling.getPercentageExperience() + "%")));
+                        "\n&2=====&6Sao-Leveling&2=====", playerLeveling.getPlayer().getName(), playerLeveling.getLevel(), playerLeveling.getExperience(), LevelingUtils.round(playerLeveling.getPercentageExperience(), 1) + "%")));
 
     }
 
@@ -70,6 +70,10 @@ public class LevelingCMDUtils {
             fw2.setFireworkMeta(fireworkMeta);
             firework.detonate();
         }
+
+        player.setLevel(playerLeveling.getLevel());
+        player.setExp((float) (playerLeveling.getPercentageExperience() / 100));
+
     }
 
     public void removeLevel(CommandSender sender, IPlayerLeveling playerLeveling, int level) {
@@ -90,6 +94,10 @@ public class LevelingCMDUtils {
         title.send(((PlayerLeveling) playerLeveling).getPlayer(), RED + "LEVEL DOWN!", ChatColor.AQUA + String.valueOf(oldLevel) + " \u2794 " + (playerLeveling.getLevel()), 1, 2, 1);
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ENDERDRAGON_GROWL, 5.0f, 5.0f);
 
+        player.setLevel(playerLeveling.getLevel());
+        player.setExp((float) (playerLeveling.getPercentageExperience() / 100));
+
+
     }
 
 
@@ -100,12 +108,19 @@ public class LevelingCMDUtils {
         int experienceRemaining = (int) (experience - playerLeveling.getExperienceRequire());
 
         if (playerLeveling.canLevelUp((int) experience)) {
-            if(experienceRemaining > 0) playerLeveling.setExperience(experienceRemaining);
-
+            playerLeveling.setExperience(Math.max(experienceRemaining, 0));
             giveLevel(null, playerLeveling, 1);
             return;
         }
         playerLeveling.setExperience((int) (playerLeveling.getExperience() + experience));
+
+        if(!playerLeveling.getPlayer().isOnline()) return;
+
+        Player player = ((PlayerLeveling) playerLeveling).getPlayer();
+
+        player.setLevel(playerLeveling.getLevel());
+        player.setExp((float) (playerLeveling.getPercentageExperience() / 100));
+
     }
 
     public void removeExperience(CommandSender sender, IPlayerLeveling playerLeveling, double newExperience, boolean needConvertPercentage) {
@@ -117,7 +132,20 @@ public class LevelingCMDUtils {
             return;
         }
 
+        if(playerLeveling.getLevel() == 0 && playerLeveling.getExperience() - newExperience < 0) {
+            sender.sendMessage(RED + "L'expérience ne peut pas être inférieur à 0 lorsqu'il est au niveau 0 !");
+            return;
+        }
+
         playerLeveling.setExperience((int) (playerLeveling.getExperience() - newExperience));
+
+        if(!playerLeveling.getPlayer().isOnline()) return;
+
+        Player player = ((PlayerLeveling) playerLeveling).getPlayer();
+
+        player.setLevel(playerLeveling.getLevel());
+        player.setExp((float) (playerLeveling.getPercentageExperience() / 100));
+
     }
 
 }

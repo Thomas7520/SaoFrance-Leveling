@@ -43,13 +43,13 @@ public class PlayerLeveling implements IPlayerLeveling {
     }
 
     @Override
-    public int getPercentageExperience() {
-        return (int) (((double) this.experience / 1000) * 100);
+    public double getPercentageExperience() {
+        return (double) this.experience / 1000 * 100;
     }
 
     @Override
-    public int getPercentageExperienceRequire() {
-        return (int) (((double) getExperienceRequire() / 1000) * 100);
+    public double getPercentageExperienceRequire() {
+        return (double) getExperienceRequire() / 1000 * 100;
     }
 
     @Override

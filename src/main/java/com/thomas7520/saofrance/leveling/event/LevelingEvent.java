@@ -23,6 +23,11 @@ public class LevelingEvent implements Listener {
         if(!getLevelingSQLUtils().hasAccount(uuid)) getLevelingSQLUtils().createSQLAccount(uuid, player.getName());
 
         getUtils().getPlayersLeveling().put(uuid.toString(), new PlayerLeveling(uuid.toString()));
+
+        PlayerLeveling playerLeveling = getUtils().getPlayersLeveling().get(uuid.toString());
+
+        player.setLevel(playerLeveling.getLevel());
+        player.setExp((float) (playerLeveling.getPercentageExperience() / 100));
     }
 
     @EventHandler

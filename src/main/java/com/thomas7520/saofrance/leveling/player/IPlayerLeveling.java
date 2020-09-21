@@ -15,9 +15,9 @@ public interface IPlayerLeveling {
 
     int getExperience();
 
-    int getPercentageExperience();
+    double getPercentageExperience();
 
-    int getPercentageExperienceRequire();
+    double getPercentageExperienceRequire();
 
     boolean canLevelUp(int experienceAcquire);
 
