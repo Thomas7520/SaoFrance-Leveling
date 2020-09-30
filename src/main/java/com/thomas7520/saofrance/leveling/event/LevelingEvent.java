@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.util.UUID;
 
@@ -41,6 +42,17 @@ public class LevelingEvent implements Listener {
 
         getUtils().savePlayer(playerLeveling);
 
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+
+        PlayerLeveling playerLeveling = getUtils().getPlayersLeveling().get(uuid.toString());
+
+        player.setLevel(playerLeveling.getLevel());
+        player.setExp((float) (playerLeveling.getPercentageExperience() / 100));
     }
 
 }
