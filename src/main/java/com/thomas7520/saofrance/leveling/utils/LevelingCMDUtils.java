@@ -27,7 +27,7 @@ public class LevelingCMDUtils {
     }
 
 
-    public IPlayerLeveling getIPlayerLeveling(CommandSender sender, String playerName) {
+    public IPlayerLeveling getIPlayerLeveling(String playerName) {
 
         IPlayerLeveling playerLeveling = null;
 
@@ -74,6 +74,8 @@ public class LevelingCMDUtils {
         player.setLevel(playerLeveling.getLevel());
         player.setExp((float) (playerLeveling.getPercentageExperience() / 100));
 
+        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', String.format("&b[SAO-France] &6%s&b a passé le niveau &6%s&b !", player.getName(), playerLeveling.getLevel())));
+
     }
 
     public void removeLevel(CommandSender sender, IPlayerLeveling playerLeveling, int level) {
@@ -97,7 +99,6 @@ public class LevelingCMDUtils {
         player.setLevel(playerLeveling.getLevel());
         player.setExp((float) (playerLeveling.getPercentageExperience() / 100));
 
-
     }
 
 
@@ -112,6 +113,7 @@ public class LevelingCMDUtils {
             giveLevel(null, playerLeveling, 1);
             return;
         }
+
         playerLeveling.setExperience((int) (playerLeveling.getExperience() + experience));
 
         if(!playerLeveling.getPlayer().isOnline()) return;

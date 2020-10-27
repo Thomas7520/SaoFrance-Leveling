@@ -37,7 +37,7 @@ public class LevelingCMD implements CommandExecutor {
 
 
         if(args.length == 2 && args[0].equalsIgnoreCase("info")) {
-            IPlayerLeveling playerLeveling = getLevelingCMDUtils().getIPlayerLeveling(sender, args[1]);
+            IPlayerLeveling playerLeveling = getLevelingCMDUtils().getIPlayerLeveling(args[1]);
 
             if(playerLeveling == null) {
                 sender.sendMessage(RED + "Le joueur est introuvable !");
@@ -50,7 +50,7 @@ public class LevelingCMD implements CommandExecutor {
 
 
         if(args.length == 4){
-            IPlayerLeveling playerLeveling = getLevelingCMDUtils().getIPlayerLeveling(sender, args[1]);
+            IPlayerLeveling playerLeveling = getLevelingCMDUtils().getIPlayerLeveling(args[1]);
 
             if(playerLeveling == null) {
                 sender.sendMessage(RED + "Le joueur est introuvable !");

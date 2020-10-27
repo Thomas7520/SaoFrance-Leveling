@@ -16,12 +16,12 @@ import static com.thomas7520.saofrance.leveling.SaoFranceLeveling.getUtils;
 public class LevelingEvent implements Listener {
 
 
-
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        if(!getLevelingSQLUtils().hasAccount(uuid)) getLevelingSQLUtils().createSQLAccount(uuid, player.getName());
+
+        if (!getLevelingSQLUtils().hasAccount(uuid)) getLevelingSQLUtils().createSQLAccount(uuid, player.getName());
 
         getUtils().getPlayersLeveling().put(uuid.toString(), new PlayerLeveling(uuid.toString()));
 
@@ -38,7 +38,7 @@ public class LevelingEvent implements Listener {
 
         PlayerLeveling playerLeveling = getUtils().getPlayersLeveling().remove(uuid);
 
-        if(playerLeveling == null) return;
+        if (playerLeveling == null) return;
 
         getUtils().savePlayer(playerLeveling);
 

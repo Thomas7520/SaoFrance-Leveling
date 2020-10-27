@@ -11,7 +11,7 @@ import static com.thomas7520.saofrance.leveling.SaoFranceLeveling.getUtils;
 public class LevelingSQLUtils {
 
     public boolean hasAccount(UUID uuid) {
-        PreparedStatement ps = null;
+        PreparedStatement ps;
         boolean exist = false;
         try {
             ps = getUtils().getSqlConnection().getConnection().prepareStatement("SELECT uuid FROM players WHERE uuid = ?");
@@ -26,7 +26,7 @@ public class LevelingSQLUtils {
     }
 
     public boolean hasAccount(String name) {
-        PreparedStatement ps = null;
+        PreparedStatement ps;
         boolean exist = false;
         try {
             ps = getUtils().getSqlConnection().getConnection().prepareStatement("SELECT name FROM players WHERE name = ?");
